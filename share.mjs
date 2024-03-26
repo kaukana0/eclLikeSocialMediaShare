@@ -73,7 +73,7 @@ class Element extends HTMLElement {
 
 	#buildURLx(text, hashtags) {
 		let retVal = 'https://twitter.com/intent/tweet'
-		retVal += '?hashtags=' + hashtags
+		retVal += '?hashtags=' + encodeURI(hashtags)
 		retVal += '&text=' + encodeURI(text)
 		const rootPath = window.location.protocol + '//' + window.location.host + window.location.pathname + '?lang=' + String.locale
 		retVal += '&url=' + encodeURI(rootPath)
