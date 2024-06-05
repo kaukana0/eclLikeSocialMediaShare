@@ -7,7 +7,7 @@ class Element extends HTMLElement {
 	#hashTags = ""
 	#mailSubject = ""
 	#mailBody = ""
-	#to
+	#callback
 
 	constructor() {	
 		super()	
@@ -26,17 +26,17 @@ class Element extends HTMLElement {
 		if(name==="mailbody") { this.#mailBody = newVal	}
 	}
 
+	set callback(val){
+		this.#callback = val
+	}
+
 	show() {
-		clearTimeout(this.#to)
 		this.shadowRoot.getElementById("main").style.display="block"
-		this.#to = setTimeout(()=>this.hide(), 15000)
 	}
 	hide() {
-		clearTimeout(this.#to)
 		this.shadowRoot.getElementById("main").style.display="none"
 	}
 	toggleVisibility() {
-		clearTimeout(this.#to)
 		this.shadowRoot.getElementById("main").style.display = this.shadowRoot.getElementById("main").style.display==="none"?this.show():this.hide()
 	}
 
@@ -56,6 +56,10 @@ class Element extends HTMLElement {
 		this.shadowRoot.getElementById("lin").addEventListener("click", e=> {
 			this.hide()
 			window.open(this.#buildURLLinkedIn())
+		})
+		this.shadowRoot.getElementById("embed").addEventListener("click", e=> {
+			this.hide()
+			if(this.#callback) {this.#callback(Element.getURLFromOGTag())}
 		})
 	}
 
@@ -84,6 +88,16 @@ class Element extends HTMLElement {
 		return "https://www.linkedin.com/sharing/share-offsite/?url=" +
 				encodeURIComponent(window.location.href)
 	}
+
+	static getURLFromOGTag() {
+		let retVal = ""
+		const el = document.querySelector("meta[property='og:url']")
+		if(el) {
+			return el.getAttribute("content")
+		}
+		return retVal
+	}
+
 
 }
 
